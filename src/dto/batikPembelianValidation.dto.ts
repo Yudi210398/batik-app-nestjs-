@@ -7,6 +7,10 @@ import {
 } from 'class-validator';
 
 export class PembelianBatik {
+  @IsOptional()
+  @IsString()
+  _id: string;
+
   @IsNotEmpty({ message: 'tidak boleh kosong' })
   @IsString({ message: 'data harus berupa text' })
   namaPembeli: string;
@@ -15,8 +19,9 @@ export class PembelianBatik {
   @IsNumber({}, { message: 'Harus Berupa Number' })
   quantityPembeli: number;
 
+  @IsOptional()
   @IsDate()
-  tanggalpembelian: Date;
+  tanggalpembelian?: Date;
 
   @IsOptional()
   @IsString()
