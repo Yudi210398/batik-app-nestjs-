@@ -4,12 +4,14 @@ import {
   Get,
   Patch,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { BatikService } from './batik.service';
 import { CreateDtoBatik } from 'src/dto/batikValidasi.dto';
 import { PembelianBatik } from 'src/dto/batikPembelianValidation.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('batik')
 export class BatikController {
@@ -21,6 +23,7 @@ export class BatikController {
     return await this.batikService.createBatik(batik);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getData() {
     return await this.batikService.getDataBatik();

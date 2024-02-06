@@ -1,7 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Login } from 'src/model/UserShema';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    @InjectModel(Login.name) private user: Model<Login>,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async validateUser(username: string, password: string) {
+    const checkUsername = await this.user.findOne({ username });
+    console.log(checkUsername);
+    if (await !checkUsername)
+      throw new HttpException('username tidak ditemukan', 401);
+
+    if ((await checkUsername.password) !== password)
+      throw new HttpException('password salah', 401);
+    return await checkUsername;
+  }
+
+  async login(user) {
+    console.log(user, `cak`);
+    const payload = {
+      username: user.username,
+    };
+
+    return {
+      token: this.jwtService.sign(payload),
+    };
+  }
+
+  async getDataLogin() {
+    return await this.user.find();
+  }
 }
