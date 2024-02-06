@@ -19,11 +19,20 @@ export class AuthService {
 
     if ((await checkUsername.password) !== password)
       throw new HttpException('password salah', 401);
-    return await checkUsername;
+
+    const payload = {
+      username: checkUsername.username,
+    };
+
+    checkUsername.refreshToken = await this.jwtService.sign(payload, {
+      expiresIn: '9999 years',
+    });
+
+    return await checkUsername.save();
   }
 
   async login(user) {
-    console.log(user, `cak`);
+    console.log(`${process.env.SECRETKEYJWT}`);
     const payload = {
       username: user.username,
     };

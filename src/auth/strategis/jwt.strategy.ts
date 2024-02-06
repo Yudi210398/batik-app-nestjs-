@@ -6,9 +6,9 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('datas'),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('dog'),
       ignoreExpiration: false,
-      secretOrKey: 'data123',
+      secretOrKey: `data123`,
     });
   }
 

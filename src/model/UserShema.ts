@@ -7,6 +7,9 @@ export class Login {
 
   @Prop({ type: String })
   password: string;
+
+  @Prop()
+  refreshToken: string;
 }
 
 export const UserShema = SchemaFactory.createForClass(Login);
