@@ -13,6 +13,6 @@ export class LocalStategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(username, password);
 
     if (!user) throw new HttpException('Email / Password Salah', 401);
-    return user;
+    return user.save();
   }
 }

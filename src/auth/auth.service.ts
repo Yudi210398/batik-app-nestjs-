@@ -32,9 +32,9 @@ export class AuthService {
   }
 
   async login(user) {
-    console.log(`${process.env.SECRETKEYJWT}`);
     const payload = {
       username: user.username,
+      id: user._id,
     };
 
     return {
@@ -44,5 +44,30 @@ export class AuthService {
 
   async getDataLogin() {
     return await this.user.find();
+  }
+
+  async refreshToken(userId: string) {
+    const data = (await this.user.find()).filter((datas) => {
+      return datas?._id.toString() === userId;
+    });
+
+    if (data.length === 0) throw new HttpException('Data tidak Ada ', 404);
+
+    try {
+      const decoded = await this.jwtService.verify(data[0].refreshToken);
+
+      if (!decoded) throw new HttpException('Token sudah kadaluarse', 404);
+
+      const payload = {
+        username: data[0].username,
+        id: data[0]._id,
+      };
+
+      return {
+        accsesToken: this.jwtService.sign(payload),
+      };
+    } catch (err) {
+      throw new HttpException('Token sudah kadaluarse', 404);
+    }
   }
 }
